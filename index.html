@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="离线、可逐步执行的排列字典序算法可视化工具。">
-  <title>Permutation Visualizer · 排列字典序算法可视化</title>
+  <meta name="description" content="积木风格、可逐步执行的排列字典序算法可视化工具。">
+  <title>Brick Algorithm Lab · 排列字典序积木实验室</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23080d16'/%3E%3Cpath d='M14 20h10v10H14zm13 0h10v10H27zm13 0h10v10H40zM14 34h10v10H14zm13 0h10v10H27zm13 0h10v10H40z' fill='none' stroke='%2358a6ff' stroke-width='3'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -13,12 +13,12 @@
     <header class="topbar">
       <div class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="brand-copy">
-        <strong>Permutation Visualizer</strong>
-        <span>排列字典序算法可视化</span>
+        <strong>Brick Algorithm Lab</strong>
+        <span>排列字典序积木实验室</span>
       </div>
       <div class="topbar-status">
         <span class="status-dot"></span>
-        <span>LOCAL LAB</span>
+        <span>BRICK LAB · 本地预览</span>
         <span class="divider"></span>
         <span id="current-permutation-label">2 6 4 5 8 1 7 3</span>
       </div>
@@ -38,9 +38,9 @@
       <section class="view active" id="view-overview" aria-labelledby="overview-title">
         <div class="overview-grid">
           <div class="overview-main">
-            <p class="eyebrow">ALGORITHM STUDIO / 00</p>
-            <h1 id="overview-title">不生成所有排列，<br>也能知道它排第几个。</h1>
-            <p class="lede">选中一个排列，沿着两条算法轨道逐步运行。每次比较、每项贡献、每个位置变化都能停下来讲清楚。</p>
+            <p class="eyebrow">BRICK ALGORITHM LAB / 00</p>
+            <h1 id="overview-title">像搭积木一样，<br>拆开排列算法。</h1>
+            <p class="lede">每个数字是一块积木，每一步是一条搭建指令。沿着两条算法轨道逐步运行，让比较、贡献和位置变化都“看得见、拿得起”。</p>
             <div class="question-track">
               <button class="question-row" data-go="rank">
                 <span class="question-number">01</span>
@@ -56,11 +56,11 @@
           </div>
 
           <div class="overview-console">
-            <div class="console-head"><span>ACTIVE SEQUENCE</span><span>n = <b id="overview-n">8</b></span></div>
+            <div class="console-head"><span>ACTIVE BRICK SEQUENCE</span><span>n = <b id="overview-n">8</b></span></div>
             <div class="mini-array" id="overview-array"></div>
             <div class="scale-row"><span>0</span><div></div><span id="overview-max-rank">40319</span></div>
             <div class="console-metric"><span>当前字典序值</span><strong id="overview-rank-large">8,227</strong><small>zero-based index</small></div>
-            <button class="primary-action" data-go="rank">开始逐步演示</button>
+            <button class="primary-action" data-go="rank">开始搭建算法</button>
           </div>
         </div>
 
@@ -74,7 +74,7 @@
 
       <section class="view" id="view-lexicon" aria-labelledby="lexicon-title">
         <div class="section-head">
-          <div><p class="eyebrow">CONCEPT / 01</p><h2 id="lexicon-title">什么是字典序？</h2></div>
+          <div><p class="eyebrow">BRICK ORDER / 01</p><h2 id="lexicon-title">什么是字典序？</h2></div>
           <p>像查字典一样，从左到右比较。对于 n 个不同元素，共有 <b>n!</b> 个排列；排序后的 0-based 编号就是字典序值。</p>
         </div>
         <div class="concept-layout">
@@ -99,12 +99,12 @@
 
       <section class="view" id="view-rank" aria-labelledby="rank-title">
         <div class="section-head compact">
-          <div><p class="eyebrow">LEHMER CODE / 02</p><h2 id="rank-title">计算字典序值</h2></div>
+          <div><p class="eyebrow">LEHMER BRICK WALL / 02</p><h2 id="rank-title">计算字典序值</h2></div>
           <div class="result-chip"><span>当前累计</span><strong id="rank-total">0</strong></div>
         </div>
         <div class="algorithm-stage">
           <div class="array-stage">
-            <div class="stage-meta"><span>INPUT SEQUENCE</span><span id="rank-step-counter">STEP 0 / 8</span></div>
+            <div class="stage-meta"><span>INPUT BRICKS</span><span id="rank-step-counter">STEP 0 / 8</span></div>
             <div class="number-board" id="rank-board" aria-label="当前排列"></div>
             <div class="legend"><span class="legend-current">当前元素</span><span class="legend-smaller">右侧更小</span><span>未处理</span></div>
           </div>
@@ -127,14 +127,14 @@
 
       <section class="view" id="view-next" aria-labelledby="next-title">
         <div class="section-head compact">
-          <div><p class="eyebrow">IN-PLACE TRANSFORM / 03</p><h2 id="next-title">寻找下一排列</h2></div>
+          <div><p class="eyebrow">REBUILD IN PLACE / 03</p><h2 id="next-title">寻找下一排列</h2></div>
           <div class="phase-track" id="phase-track">
             <span class="active">1 找 pivot</span><i></i><span>2 换 successor</span><i></i><span>3 反转后缀</span>
           </div>
         </div>
         <div class="algorithm-stage next-stage">
           <div class="array-stage">
-            <div class="stage-meta"><span>IN-PLACE ARRAY</span><span id="next-step-counter">STEP 0</span></div>
+            <div class="stage-meta"><span>BRICK LINE</span><span id="next-step-counter">STEP 0</span></div>
             <div class="number-board" id="next-board" aria-label="下一排列动画"></div>
             <div class="legend"><span class="legend-scan">扫描</span><span class="legend-pivot">pivot</span><span class="legend-successor">successor</span><span class="legend-suffix">后缀</span></div>
           </div>
@@ -153,7 +153,7 @@
 
       <section class="view" id="view-playground" aria-labelledby="playground-title">
         <div class="section-head">
-          <div><p class="eyebrow">FREE EXPERIMENT / 04</p><h2 id="playground-title">Playground</h2></div>
+          <div><p class="eyebrow">BUILD YOUR OWN / 04</p><h2 id="playground-title">Playground</h2></div>
           <p>输入 3–10 的 n 与一个 1…n 排列。结果和动画轨迹均由输入实时生成，不是固定样例。</p>
         </div>
         <div class="playground-grid">
@@ -188,7 +188,7 @@
 
       <section class="view" id="view-complexity" aria-labelledby="complexity-title">
         <div class="section-head">
-          <div><p class="eyebrow">ANALYSIS / 05</p><h2 id="complexity-title">算法分析</h2></div>
+          <div><p class="eyebrow">BLUEPRINT / 05</p><h2 id="complexity-title">算法分析</h2></div>
           <p>第一版优先可读性：所有关键逻辑与 C++ 正式实现保持一致。</p>
         </div>
         <div class="complexity-grid">
