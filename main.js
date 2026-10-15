@@ -114,7 +114,11 @@
 
     render(values, decorate) {
       const oldPositions = new Map();
-      this.nodes.forEach((node, value) => oldPositions.set(value, node.getBoundingClientRect()));
+      this.nodes.forEach((node, value) => {
+        if (!values.includes(value)) { node.remove(); this.nodes.delete(value); return; }
+        oldPositions.set(value, node.getBoundingClientRect());
+        node.getAnimations().forEach((animation) => animation.cancel());
+      });
 
       values.forEach((value, index) => {
         let node = this.nodes.get(value);
@@ -139,14 +143,15 @@
         const deltaX = oldPosition.left - newPosition.left;
         const deltaY = oldPosition.top - newPosition.top;
         if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) return;
-        node.style.transition = "none";
-        node.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-        node.classList.add("is-moving");
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          node.style.transition = "";
-          node.style.transform = "";
-          window.setTimeout(() => node.classList.remove("is-moving"), 500);
-        }));
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !this.element.getClientRects().length) return;
+        const restingTransform = getComputedStyle(node).transform;
+        const rest = restingTransform === "none" ? "" : restingTransform;
+        node.animate([
+          { transform: `translate(${deltaX}px, ${deltaY}px) ${rest}`, offset: 0 },
+          { transform: `translate(${deltaX * .54}px, ${deltaY - (deltaX > 0 ? 34 : -25)}px) ${rest}`, offset: .48 },
+          { transform: `translate(0, -3px) ${rest}`, offset: .88 },
+          { transform: rest || "none", offset: 1 }
+        ], { duration: 640, easing: "cubic-bezier(.22,.68,.22,1)" });
       });
     }
   }
@@ -180,10 +185,10 @@
     rankBoard.render(step.array, (node, nodeIndex) => {
       if (nodeIndex === step.currentIndex) {
         node.classList.add("is-current");
-        node.dataset.label = "current";
+        node.dataset.label = "当前";
       } else if (step.smallerIndices?.includes(nodeIndex)) {
         node.classList.add("is-smaller");
-        node.dataset.label = "smaller";
+        node.dataset.label = "更小";
       }
       if (step.kind === "complete") node.classList.add("is-complete");
     });
@@ -211,7 +216,8 @@
       <td>${row.position}</td><td>${row.value}</td><td>${row.smaller}</td>
       <td>${row.weightIndex}! = ${row.weight}</td><td>${row.contribution}</td><td>${row.rank}</td>
     </tr>`).join("");
-    tableBody.lastElementChild?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    const tableViewport = tableBody.closest(".rank-table-wrap");
+    tableViewport.scrollTop = tableViewport.scrollHeight;
   }
 
   function renderNext(index) {
@@ -274,6 +280,7 @@
     $("#overview-next").textContent = next ? next.join("") : "LAST";
     $("#overview-max-rank").textContent = maxRank;
     $("#overview-array").innerHTML = currentPermutation.map((value) => `<span>${value}</span>`).join("");
+    $("#overview-array").style.setProperty("--count", currentPermutation.length);
     const percentage = maxRank ? (rank / maxRank) * 100 : 0;
     $(".scale-row div").style.background = `linear-gradient(90deg, var(--blue) ${percentage}%, var(--line) ${percentage}%)`;
   }
@@ -318,6 +325,16 @@
     return values;
   }
 
+  function resizePermutation() {
+    const n = Number($("#n-input").value);
+    if (!Number.isInteger(n) || n < 3 || n > 10) return;
+    const values = currentPermutation.filter((value) => value <= n);
+    for (let value = 1; value <= n; value += 1) {
+      if (!values.includes(value)) values.push(value);
+    }
+    loadPermutation(values);
+  }
+
   $$(".nav-item").forEach((button) => button.addEventListener("click", () => showView(button.dataset.view)));
   $$('[data-go]').forEach((button) => button.addEventListener("click", () => showView(button.dataset.go)));
 
@@ -336,11 +353,14 @@
     loadPermutation(shuffledPermutation(n));
   });
 
+  $("#n-input").addEventListener("change", resizePermutation);
   $("#n-minus").addEventListener("click", () => {
     $("#n-input").value = Math.max(3, Number($("#n-input").value) - 1 || 3);
+    resizePermutation();
   });
   $("#n-plus").addEventListener("click", () => {
     $("#n-input").value = Math.min(10, Number($("#n-input").value) + 1 || 3);
+    resizePermutation();
   });
 
   $$("[data-sample]").forEach((button) => button.addEventListener("click", () => {

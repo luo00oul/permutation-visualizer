@@ -3,28 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="积木风格、可逐步执行的排列字典序算法可视化工具。">
-  <title>Brick Algorithm Lab · 排列字典序积木实验室</title>
+  <meta name="description" content="排列的字典序问题：用积木动画逐步讲解字典序值与下一排列。">
+  <title>排列的字典序问题 · 本地新版</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23080d16'/%3E%3Cpath d='M14 20h10v10H14zm13 0h10v10H27zm13 0h10v10H40zM14 34h10v10H14zm13 0h10v10H27zm13 0h10v10H40z' fill='none' stroke='%2358a6ff' stroke-width='3'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="anime.css">
+  <link rel="stylesheet" href="wallpaper.css">
 </head>
 <body>
+  <div class="wallpaper-layer" aria-hidden="true"></div>
   <div class="app-shell">
     <header class="topbar">
       <div class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="brand-copy">
-        <strong>Brick Algorithm Lab</strong>
-        <span>排列字典序积木实验室</span>
+        <strong>排列的字典序问题<span class="brand-star">✦</span></strong>
+        <span>算法设计与分析 · 实现题 2-6</span>
       </div>
       <div class="topbar-status">
+        <button type="button" id="wallpaper-open">更换背景</button>
         <span class="status-dot"></span>
-        <span>BRICK LAB · 本地预览</span>
+        <span>GitHub Pages · 在线演示</span>
         <span class="divider"></span>
         <span id="current-permutation-label">2 6 4 5 8 1 7 3</span>
       </div>
     </header>
 
     <aside class="rail" aria-label="主导航">
+      <div class="rail-title">ALGORITHM TOOL<span>排列 · Rank · Next</span></div>
       <button class="nav-item active" data-view="overview"><span class="nav-index">00</span><span>总览</span></button>
       <button class="nav-item" data-view="lexicon"><span class="nav-index">01</span><span>字典序</span></button>
       <button class="nav-item" data-view="rank"><span class="nav-index">02</span><span>Rank</span></button>
@@ -38,9 +43,10 @@
       <section class="view active" id="view-overview" aria-labelledby="overview-title">
         <div class="overview-grid">
           <div class="overview-main">
-            <p class="eyebrow">BRICK ALGORITHM LAB / 00</p>
-            <h1 id="overview-title">像搭积木一样，<br>拆开排列算法。</h1>
-            <p class="lede">每个数字是一块积木，每一步是一条搭建指令。沿着两条算法轨道逐步运行，让比较、贡献和位置变化都“看得见、拿得起”。</p>
+            <p class="eyebrow">✦ 算法设计与分析 · 实现题 2-6</p>
+            <h1 id="overview-title">排列的<br><span class="title-accent">字典序问题</span></h1>
+            <p class="lede">从字典序值到下一排列，用积木动画拆解比较、pivot、交换与后缀反转。</p>
+            <div class="club-tags"><span>可暂停的思考</span><span>看得见的推导</span><span>自己出题试试</span></div>
             <div class="question-track">
               <button class="question-row" data-go="rank">
                 <span class="question-number">01</span>
@@ -56,11 +62,16 @@
           </div>
 
           <div class="overview-console">
+            <div class="overview-banner" aria-hidden="true">
+              <span class="banner-kicker">PERMUTATION VISUALIZER</span>
+              <strong><span>n!</span> 种排列，<br>一步步看懂。</strong>
+              <div class="banner-bricks"><i>1</i><i>2</i><i>3</i><i>…</i><i>n</i></div>
+            </div>
             <div class="console-head"><span>ACTIVE BRICK SEQUENCE</span><span>n = <b id="overview-n">8</b></span></div>
             <div class="mini-array" id="overview-array"></div>
             <div class="scale-row"><span>0</span><div></div><span id="overview-max-rank">40319</span></div>
             <div class="console-metric"><span>当前字典序值</span><strong id="overview-rank-large">8,227</strong><small>zero-based index</small></div>
-            <button class="primary-action" data-go="rank">开始搭建算法</button>
+            <button class="primary-action" data-go="rank">开始搭建算法 <span aria-hidden="true">→</span></button>
           </div>
         </div>
 
@@ -70,6 +81,7 @@
           <button data-go="next"><span>03</span><b>寻找下一排列</b><small>pivot · swap · reverse</small></button>
           <button data-go="playground"><span>04</span><b>Playground</b><small>输入任意排列验证</small></button>
         </div>
+        <p class="club-footer">✦ 每一块都有位置，每一步都有理由。<span>PERMUTATION / RANK / NEXT</span></p>
       </section>
 
       <section class="view" id="view-lexicon" aria-labelledby="lexicon-title">
@@ -201,6 +213,17 @@
     </main>
   </div>
 
+  <dialog id="wallpaper-dialog" aria-labelledby="wallpaper-title">
+    <div class="wallpaper-heading"><h2 id="wallpaper-title">设置背景</h2><button id="wallpaper-close" type="button" aria-label="关闭背景设置">×</button></div>
+    <p>从电脑文件夹中选择照片、GIF 或视频壁纸，只在本机使用。</p>
+    <label class="wallpaper-file-label" for="wallpaper-file">选择照片或动态壁纸</label>
+    <input id="wallpaper-file" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif,image/bmp,video/mp4,video/webm">
+    <small>支持 JPG、PNG、WebP、GIF、MP4、WebM。Wallpaper Engine 工程请先导出成图片或视频。</small>
+    <label class="wallpaper-dimmer">背景遮罩 <input id="wallpaper-shade" type="range" min="0" max="90" value="22"><output id="wallpaper-shade-value">22%</output></label>
+    <div class="wallpaper-actions"><button type="button" id="wallpaper-motion" disabled>暂停动态背景</button><button type="button" id="wallpaper-reset">恢复原背景</button></div>
+    <p id="wallpaper-status" role="status">尚未选择背景。</p>
+  </dialog>
+  <script src="wallpaper.js"></script>
   <script src="rank_animation.js"></script>
   <script src="next_animation.js"></script>
   <script src="main.js"></script>

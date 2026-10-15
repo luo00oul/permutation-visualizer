@@ -1,0 +1,25 @@
+.wallpaper-layer { display: none; position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; background: #ddd; }
+.has-wallpaper .wallpaper-layer { display: block; }
+.wallpaper-layer img,.wallpaper-layer video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.wallpaper-layer::after { content: ''; position: absolute; inset: 0; background: rgb(255 253 246 / var(--wallpaper-shade, .32)); }
+.has-wallpaper::before { display: none; }
+.app-shell { position: relative; z-index: 1; }
+.has-wallpaper .overview-main { background: #fffdf6e8; padding: 26px; border: 2px solid var(--line); border-radius: 14px; }
+.has-wallpaper .section-head { background: #fffdf6ed; border-radius: 12px; padding: 18px 22px; }
+.has-wallpaper .sample-row { background: #fffdf6ed; border-radius: 8px; padding: 12px; }
+.has-wallpaper .rail { background-color: #edf3ffe6; background-image: radial-gradient(circle, #9cbde638 0 5px, transparent 6px); }
+.has-wallpaper .rail-footer { color: #344964; }
+#wallpaper-open { border: 2px solid var(--line); padding: 8px 12px; border-radius: 7px; background: #fffdf6; color: var(--text); font: 700 13px var(--font); cursor: pointer; letter-spacing: 0; }
+#wallpaper-dialog { width: min(520px,calc(100vw - 32px)); max-height: calc(100vh - 40px); overflow: auto; padding: 26px; color: var(--text); background: #fffdf6; border: 3px solid var(--line); border-radius: 16px; box-shadow: 6px 8px #17171744; }
+#wallpaper-dialog::backdrop { background: #10182077; }
+.wallpaper-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }.wallpaper-heading h2 { font-size: 25px; }
+#wallpaper-dialog p { font-size: 14px; line-height: 1.8; margin-top: 16px; }
+#wallpaper-dialog button { color: var(--text); background: #fff; border: 2px solid var(--line); padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+#wallpaper-dialog button:disabled { opacity: .45; cursor: default; }
+#wallpaper-close { font-size: 22px; line-height: 1; }
+.wallpaper-file-label { display: block; font-weight: 700; margin: 20px 0 10px; }
+#wallpaper-file { width: 100%; font-size: 13px; }#wallpaper-file::file-selector-button { background: var(--yellow); border: 2px solid var(--line); border-radius: 6px; padding: 10px; margin-right: 10px; cursor: pointer; }
+#wallpaper-dialog small { display: block; color: #665f53; font-size: 12px; line-height: 1.8; margin-top: 12px; }
+.wallpaper-dimmer { display: flex; align-items: center; gap: 12px; font-size: 13px; margin: 24px 0; }.wallpaper-dimmer input { flex: 1; min-width: 0; accent-color: var(--blue); }.wallpaper-dimmer output { min-width: 35px; }
+.wallpaper-actions { display: flex; gap: 10px; flex-wrap: wrap; }#wallpaper-status { color: #496149; overflow-wrap: anywhere; }
+@media(max-width:780px) { .rail { top:auto; bottom:0; height:72px; padding:6px; gap:5px; }.nav-item { min-width:0; flex:1; padding:0 3px; font-size:11px; }.app-shell { padding-bottom:82px; }.topbar-status > .status-dot,.topbar-status > span { display: none; }.brand-copy strong { font-size: 14px; }#wallpaper-open { font-size: 12px; padding: 7px; }.has-wallpaper .overview-main { padding: 20px; }.has-wallpaper .section-head { padding: 16px; } }
