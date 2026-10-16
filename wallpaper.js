@@ -9,7 +9,7 @@
   let currentMedia = null;
   let currentFile = null;
   let revision = 0;
-  const defaultPoster = 'preview.gif';
+  const defaultPoster = '1.jpg';
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   function storage(action, value) {
     return new Promise((resolve, reject) => {
@@ -109,11 +109,11 @@
     media.alt = ''; media.src = defaultPoster;
     layer.replaceChildren(media); currentMedia = media;
     document.body.classList.add('has-wallpaper'); setShade(22); motion.disabled = true;
-    motion.textContent = 'GIF 动态循环';
-    status.textContent = '默认动态壁纸预览（轻量 GIF）；也可以选择本机照片或视频。';
-    media.addEventListener('error', () => { status.textContent = '默认背景预览图无法读取，可选择本机图片或视频。'; });
+    motion.textContent = '静态图片背景';
+    status.textContent = '默认背景：1.jpg；也可以选择本机照片或视频。';
+    media.addEventListener('error', () => { status.textContent = '默认图片背景无法读取，可选择本机图片或视频。'; });
   }
-  // Use the lightweight bundled preview online; a locally selected file can replace it.
+  // Start with the bundled static background; a locally selected file can replace it.
   showDefault();
   storage('get').then(async (saved) => {
     if (!saved?.file || revision) return;
